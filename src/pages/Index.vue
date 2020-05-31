@@ -60,7 +60,7 @@
       <div class="col column text-center text-white">
         <div class="col text-h2 text-weight-thin">
           Quasar <br />
-          Weather App 2
+          Weather App 7
         </div>
 
         <q-btn @click="getLocation" class="col" flat>
