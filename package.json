@@ -1,6 +1,6 @@
 {
   "name": "weather",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A weather app built with Quasar",
   "productName": "Weather",
   "cordovaId": "com.day41.weather",
