@@ -1,7 +1,7 @@
 <!--suppress JSUnresolvedVariable -->
 <template>
   <q-page class="flex column" :class="bgClass">
-    <!--    <p id="version2"></p>-->
+    <p id="version2"></p>
     <div id="notification" class="hidden">
       <p id="message"></p>
       <button id="close-button" @click="closeNotification">
@@ -167,20 +167,20 @@ export default {
     },
   },
   mounted() {
-    ipcRenderer.send('app_version');
-    ipcRenderer.on('app_version', (event, arg) => {
-      ipcRenderer.removeAllListeners('app_version');
+    window.ipcRenderer.send('app_version');
+    window.ipcRenderer.on('app_version', (event, arg) => {
+      window.ipcRenderer.removeAllListeners('app_version');
       version2.innerText = 'Version ' + arg.version;
     });
 
-    ipcRenderer.on('update_available', () => {
-      ipcRenderer.removeAllListeners('update_available');
+    window.ipcRenderer.on('update_available', () => {
+      window.ipcRenderer.removeAllListeners('update_available');
       message.innerText = 'A new update is available. Downloading now...';
       notification.classList.remove('hidden');
     });
 
-    ipcRenderer.on('update_downloaded', () => {
-      ipcRenderer.removeAllListeners('update_downloaded');
+    window.ipcRenderer.on('update_downloaded', () => {
+      window.ipcRenderer.removeAllListeners('update_downloaded');
       message.innerText =
         'Update Downloaded. It will be installed on restart. Restart now?';
       restartButton.classList.remove('hidden');
