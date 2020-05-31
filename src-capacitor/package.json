@@ -1,0 +1,12 @@
+{
+  "name": "weather",
+  "version": "0.0.1",
+  "description": "A weather app built with Quasar",
+  "author": "johne2310 <john@day41.com.au>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/cli": "^1.0.0",
+    "@capacitor/core": "^1.0.0",
+    "@capacitor/ios": "^2.1.2"
+  }
+}

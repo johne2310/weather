@@ -1,0 +1,7 @@
+{
+  "appId": "com.day41.weather",
+  "appName": "Weather",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "www"
+}

@@ -1,0 +1,10 @@
+{
+  "appId": "com.day41.weather",
+  "appName": "Weather",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "www",
+  "server": {
+    "url": "http://169.254.112.83:8080"
+  }
+}
