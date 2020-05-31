@@ -1,7 +1,10 @@
 <!--suppress JSUnresolvedVariable -->
 <template>
   <q-page class="flex column" :class="bgClass">
-    <div class="col q-pt-lg q-px-md">
+    <div class="text-caption version text-white text-weight-thin">
+      {{ version }}
+    </div>
+    <div class="col q-px-md">
       <q-input
         v-model="search"
         debounce="2000"
@@ -46,7 +49,7 @@
       <div class="col column text-center text-white">
         <div class="col text-h2 text-weight-thin">
           Quasar <br />
-          Weather
+          Weather App
         </div>
 
         <q-btn @click="getLocation" class="col" flat>
@@ -55,11 +58,12 @@
         </q-btn>
       </div>
     </template>
-    <div class="col skyline"></div>
+    <div class="col skyline text-white text-weight-thin text-h6"></div>
   </q-page>
 </template>
 
 <script>
+import { version } from '../../package.json';
 export default {
   name: 'PageIndex',
   data() {
@@ -71,6 +75,7 @@ export default {
       apiKey: '22a195c672f8217cc53213a95c45d758',
       apiUrl: `https://api.openweathermap.org/data/2.5/weather?`,
       imageUrl: null,
+      version: version,
     };
   },
   methods: {
@@ -177,5 +182,8 @@ export default {
   background: url('../statics/skyline.png');
   background-size: contain;
   background-position: center bottom;
+}
+.version {
+  text-align: right;
 }
 </style>

@@ -88,7 +88,7 @@ module.exports = function(/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
-      https: true,
+      https: false,
       port: 8080,
       open: true, // opens browser window automatically
     },
@@ -179,18 +179,28 @@ module.exports = function(/* ctx */) {
         mac: {
           hardenedRuntime: true,
           gatekeeperAssess: false,
-          entitlements: 'src-electron/entitlements.plist',
-          entitlementsInherit: 'src-electron/entitlements.plist',
+          entitlements: 'src-electron/build/entitlements.plist',
+          entitlementsInherit: 'src-electron/build/entitlements_child.plist',
           provisioningProfile:
             'src-electron/provisioning/Mac_Provisioning_Profile.provisionprofile',
         },
         win: {
           target: 'nsis',
         },
+        publish: [
+          {
+            provider: 'github',
+            owner: 'johne2310',
+            repo: 'weather',
+            token: '64788cc27b2e79369a4af9fef981e650c646ffcb',
+            //331f51d17b8e19b8455f776e1cc0bcaa078c7132
+            //64788cc27b2e79369a4af9fef981e650c646ffcb
+          },
+        ],
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
-      nodeIntegration: false,
+      nodeIntegration: true,
 
       extendWebpack(/* cfg */) {
         // do something with Electron main process Webpack cfg
