@@ -192,9 +192,6 @@ module.exports = function(/* ctx */) {
             provider: 'github',
             owner: 'johne2310',
             repo: 'weather',
-            token: '64788cc27b2e79369a4af9fef981e650c646ffcb',
-            //331f51d17b8e19b8455f776e1cc0bcaa078c7132
-            //64788cc27b2e79369a4af9fef981e650c646ffcb
           },
         ],
       },
