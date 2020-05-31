@@ -1,13 +1,13 @@
 <!--suppress JSUnresolvedVariable -->
 <template>
   <q-page class="flex column" :class="bgClass">
-    <p id="version"></p>
+    <!--    <p id="version2"></p>-->
     <div id="notification" class="hidden">
       <p id="message"></p>
-      <button id="close-button" onClick="closeNotification()">
+      <button id="close-button" @click="closeNotification">
         Close
       </button>
-      <button id="restart-button" onClick="restartApp()" class="hidden">
+      <button id="restart-button" @click="restartApp" class="hidden">
         Restart
       </button>
     </div>
@@ -75,6 +75,13 @@
 
 <script>
 import { version } from '../../package.json';
+
+const { ipcRenderer } = require('electron');
+// const version2 = document.getElementById('version');
+const notification = document.getElementById('notification');
+const message = document.getElementById('message');
+const restartButton = document.getElementById('restart-button');
+
 export default {
   name: 'PageIndex',
   data() {
@@ -104,22 +111,7 @@ export default {
             this.$q.loading.hide();
           })
           .catch(error => {});
-      }
-      // else {
-      //   if (this.$q.platform.is.mobile) {
-      //     console.log('Mobile');
-      //     const onSuccess = position => {
-      //       const lat = position.coords.latitude;
-      //       console.log('lat : ', lat);
-      //       this.lat = position.coords.latitude;
-      //       this.lng = position.coords.longitude;
-      //       console.log('lat/Lng: ', this.lat, this.lng);
-      //     };
-      //     navigator.geolocation.getCurrentPosition(onSuccess);
-      //     this.getWeatherByCoords();
-      //     this.$q.loading.hide();
-      //   }
-      else {
+      } else {
         navigator.geolocation.getCurrentPosition(position => {
           this.lat = position.coords.latitude;
           this.lng = position.coords.longitude;
@@ -155,6 +147,12 @@ export default {
         })
         .catch(error => {});
     },
+    restartApp() {
+      ipcRenderer.send('restart_app');
+    },
+    closeNotification() {
+      notification.classList.add('hidden');
+    },
   },
   computed: {
     // eslint-disable-next-line vue/return-in-computed-property
@@ -169,12 +167,6 @@ export default {
     },
   },
   mounted() {
-    const { ipcRenderer } = require('electron');
-    const version = document.getElementById('version');
-    const notification = document.getElementById('notification');
-    const message = document.getElementById('message');
-    const restartButton = document.getElementById('restart-button');
-
     ipcRenderer.send('app_version');
     ipcRenderer.on('app_version', (event, arg) => {
       ipcRenderer.removeAllListeners('app_version');
@@ -194,14 +186,6 @@ export default {
       restartButton.classList.remove('hidden');
       notification.classList.remove('hidden');
     });
-
-    function closeNotification() {
-      notification.classList.add('hidden');
-    }
-
-    function restartApp() {
-      ipcRenderer.send('restart_app');
-    }
   },
 };
 </script>
