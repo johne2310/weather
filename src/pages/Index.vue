@@ -1,20 +1,6 @@
 <!--suppress JSUnresolvedVariable -->
 <template>
   <q-page class="flex column" :class="bgClass">
-    <p id="version2"></p>
-    <div id="notification" class="hidden">
-      <p id="message"></p>
-      <button id="close-button" @click="closeNotification">
-        Close
-      </button>
-      <button id="restart-button" @click="restartApp" class="hidden">
-        Restart
-      </button>
-    </div>
-
-    <div class="text-caption version text-white text-weight-thin">
-      {{ version }}
-    </div>
     <div class="col q-px-md">
       <q-input
         v-model="search"
@@ -70,18 +56,15 @@
       </div>
     </template>
     <div class="col skyline text-white text-weight-thin text-h6"></div>
+    <div
+      id="messages"
+      class="update text-white text-captions text-weight-thin"
+    ></div>
   </q-page>
 </template>
 
 <script>
-import { version } from '../../package.json';
-
-const { ipcRenderer } = require('electron');
-// const version2 = document.getElementById('version');
-const notification = document.getElementById('notification');
-const message = document.getElementById('message');
-const restartButton = document.getElementById('restart-button');
-
+// const { ipcRenderer } = require('electron');
 export default {
   name: 'PageIndex',
   data() {
@@ -93,7 +76,6 @@ export default {
       apiKey: '22a195c672f8217cc53213a95c45d758',
       apiUrl: `https://api.openweathermap.org/data/2.5/weather?`,
       imageUrl: null,
-      version: version,
     };
   },
   methods: {
@@ -135,23 +117,21 @@ export default {
         .catch(error => {});
     },
     getWeatherBySearch() {
-      this.$q.loading.show();
-      this.$axios(
-        `${this.apiUrl}q=${this.search}&appid=${this.apiKey}&units=metric`
-      )
-        .then(response => {
-          this.weatherData = response.data;
-          this.imageUrl = `https://openweathermap.org/img/wn/${this.weatherData.weather[0].icon}@2x.png`;
-          this.$q.loading.hide();
-          this.search = '';
-        })
-        .catch(error => {});
-    },
-    restartApp() {
-      ipcRenderer.send('restart_app');
-    },
-    closeNotification() {
-      notification.classList.add('hidden');
+      if (this.search === '') {
+        return;
+      } else {
+        this.$q.loading.show();
+        this.$axios(
+          `${this.apiUrl}q=${this.search}&appid=${this.apiKey}&units=metric`
+        )
+          .then(response => {
+            this.weatherData = response.data;
+            this.imageUrl = `https://openweathermap.org/img/wn/${this.weatherData.weather[0].icon}@2x.png`;
+            this.$q.loading.hide();
+            this.search = '';
+          })
+          .catch(error => {});
+      }
     },
   },
   computed: {
@@ -167,25 +147,15 @@ export default {
     },
   },
   mounted() {
-    window.ipcRenderer.send('app_version');
-    window.ipcRenderer.on('app_version', (event, arg) => {
-      window.ipcRenderer.removeAllListeners('app_version');
-      version2.innerText = 'Version ' + arg.version;
-    });
-
-    window.ipcRenderer.on('update_available', () => {
-      window.ipcRenderer.removeAllListeners('update_available');
-      message.innerText = 'A new update is available. Downloading now...';
-      notification.classList.remove('hidden');
-    });
-
-    window.ipcRenderer.on('update_downloaded', () => {
-      window.ipcRenderer.removeAllListeners('update_downloaded');
-      message.innerText =
-        'Update Downloaded. It will be installed on restart. Restart now?';
-      restartButton.classList.remove('hidden');
-      notification.classList.remove('hidden');
-    });
+    // Listen for messages
+    if (this.$q.platform.is.electron) {
+      window.ipcRenderer.on('message', function(event, text) {
+        const container = document.getElementById('messages');
+        const message = document.createElement('div');
+        message.innerHTML = text;
+        container.appendChild(message);
+      });
+    }
   },
 };
 </script>
@@ -237,5 +207,10 @@ export default {
 }
 .hidden {
   display: none;
+}
+.update {
+  z-index: 5000;
+  background-position: center bottom;
+  background-color: black;
 }
 </style>

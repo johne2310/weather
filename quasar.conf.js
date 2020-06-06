@@ -187,6 +187,8 @@ module.exports = function(/* ctx */) {
         win: {
           target: 'nsis',
         },
+        //run the script to notarize the file and staple the ticket to the app
+        // afterSign: 'src-electron/scripts/notarize.js',
         publish: [
           {
             provider: 'github',

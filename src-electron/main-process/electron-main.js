@@ -1,26 +1,7 @@
-import {
-  app,
-  BrowserWindow,
-  nativeTheme,
-  Menu,
-  protocol,
-  ipcMain,
-} from 'electron';
+import { app, BrowserWindow, nativeTheme, webContents } from 'electron';
 
-const log = require('electron-log');
-const { autoUpdater } = require('electron-updater');
-
-//-------------------------------------------------------------------
-// Logging
-//
-// THIS SECTION IS NOT REQUIRED
-//
-// This logging setup is not required for auto-updates to work,
-// but it sure makes debugging easier :)
-//-------------------------------------------------------------------
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
-log.info('App starting...');
+//set path variable to support import of electron-preload request
+const path = require('path');
 
 try {
   if (
@@ -43,14 +24,14 @@ if (process.env.PROD) {
     .replace(/\\/g, '\\\\');
 }
 
-let mainWindow;
-
-function sendStatusToWindow(text) {
-  log.info(text);
-  mainWindow.webContents.send('message', text);
-}
+export let mainWindow;
+//import update module which contains all the aut-update logic
+const updater = require('./updater');
 
 function createWindow() {
+  // activate auto-updater module
+  setTimeout(updater, 10000);
+  // updater();
   /**
    * Initial window options
    */
@@ -64,8 +45,13 @@ function createWindow() {
       nodeIntegration: QUASAR_NODE_INTEGRATION,
       nodeIntegrationInWorker: QUASAR_NODE_INTEGRATION,
 
+      //enableRemoteModule will be set to false by default in Electron v10
+      enableRemoteModule: true,
+
+      // preload: path.resolve(__dirname, 'electron-preload.js'),
+
       // More info: /quasar-cli/developing-electron-apps/electron-preload-script
-      // preload: path.resolve(__dirname, 'electron-preload.js')
+      preload: path.resolve(__dirname, 'electron-preload.js'),
     },
   });
 
@@ -74,16 +60,13 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-  mainWindow.once('ready-to-show', () => {
-    autoUpdater.checkForUpdatesAndNotify();
-  });
 }
 
-// auto update start
-
-//auto update end
-
 app.on('ready', createWindow);
+
+// app.on('ready', function() {
+//   updater();
+// });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -95,20 +78,4 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
   }
-});
-
-ipcMain.on('app_version', event => {
-  event.sender.send('app_version', { version: app.getVersion() });
-});
-
-autoUpdater.on('update-available', () => {
-  mainWindow.webContents.send('update_available');
-});
-
-autoUpdater.on('update-downloaded', () => {
-  mainWindow.webContents.send('update_downloaded');
-});
-
-ipcMain.on('restart_app', () => {
-  autoUpdater.quitAndInstall();
 });

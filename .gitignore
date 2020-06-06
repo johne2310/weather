@@ -31,3 +31,7 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
+#electron
+/src-electron/build/
+/src-electron/provisioning/
