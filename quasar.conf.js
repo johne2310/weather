@@ -7,6 +7,9 @@
 // https://quasar.dev/quasar-cli/quasar-conf-js
 /* eslint-env node */
 
+//import QENV file to use it environmental parameters for building
+const envFile = require('./.quasar.env.json');
+
 module.exports = function(/* ctx */) {
   return {
     // app boot file (/src/boot)
@@ -179,13 +182,17 @@ module.exports = function(/* ctx */) {
         mac: {
           hardenedRuntime: true,
           gatekeeperAssess: false,
-          entitlements: 'src-electron/build/entitlements.plist',
+          entitlements: 'src-electron/build/entitlements.mac.plist',
           entitlementsInherit: 'src-electron/build/entitlements_child.plist',
           provisioningProfile:
             'src-electron/provisioning/Mac_Provisioning_Profile.provisionprofile',
         },
         win: {
-          target: 'nsis',
+          certificateFile: envFile.production.CSC_LINK,
+          certificatePassword: envFile.production.CSC_KEY_PASSWORD,
+          // publisherName: 'day41',
+          // certificateFile: 'src-electron/build/Mac_Dev_Cert_for_Win_Use.p12',
+          // certificatePassword: '',
         },
         //run the script to notarize the file and staple the ticket to the app
         // afterSign: 'src-electron/scripts/notarize.js',

@@ -1,4 +1,11 @@
-import { app, BrowserWindow, nativeTheme, webContents } from 'electron';
+import { app, BrowserWindow, Menu, nativeTheme } from 'electron';
+// This is the ES5 version (using require)
+// const updater = require('./updater');
+// Change import to ES6 syntax
+//import update module which contains all the aut-update logic
+import { updater } from './updater';
+import { menuTemplate } from './menu-template';
+const envFile = require('../../.quasar.env.json');
 
 //set path variable to support import of electron-preload request
 const path = require('path');
@@ -25,13 +32,15 @@ if (process.env.PROD) {
 }
 
 export let mainWindow;
-//import update module which contains all the aut-update logic
-const updater = require('./updater');
+const menu = Menu.buildFromTemplate(menuTemplate);
 
 function createWindow() {
   // activate auto-updater module
-  setTimeout(updater, 10000);
-  // updater();
+  // setTimeout(updater, 10000);
+  if (process.env.NODE_ENV !== 'development') {
+    // only run autoupdate if not dev mode
+    updater();
+  }
   /**
    * Initial window options
    */
@@ -56,10 +65,14 @@ function createWindow() {
   });
 
   mainWindow.loadURL(process.env.APP_URL);
+  // mainWindow.loadURL(envFile.production.APP_URL);
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  //initialise menu
+  Menu.setApplicationMenu(menu);
 }
 
 app.on('ready', createWindow);

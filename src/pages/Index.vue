@@ -55,11 +55,10 @@
         </q-btn>
       </div>
     </template>
-    <div class="col skyline text-white text-weight-thin text-h6"></div>
-    <div
-      id="messages"
-      class="update text-white text-captions text-weight-thin"
-    ></div>
+    <div class="col skyline"></div>
+    <div v-if="progress" class="update text-grey text-caption">
+      Download progress: {{ progress }}%
+    </div>
   </q-page>
 </template>
 
@@ -76,6 +75,7 @@ export default {
       apiKey: '22a195c672f8217cc53213a95c45d758',
       apiUrl: `https://api.openweathermap.org/data/2.5/weather?`,
       imageUrl: null,
+      progress: '',
     };
   },
   methods: {
@@ -148,12 +148,15 @@ export default {
   },
   mounted() {
     // Listen for messages
+    // self needed here to access the data property 'progress'
+    const self = this;
     if (this.$q.platform.is.electron) {
       window.ipcRenderer.on('message', function(event, text) {
-        const container = document.getElementById('messages');
-        const message = document.createElement('div');
-        message.innerHTML = text;
-        container.appendChild(message);
+        self.progress = text;
+      });
+      //handle get weather menu
+      window.ipcRenderer.on('weather-here', () => {
+        this.getLocation();
       });
     }
   },
@@ -210,7 +213,7 @@ export default {
 }
 .update {
   z-index: 5000;
-  background-position: center bottom;
   background-color: black;
+  text-align: right;
 }
 </style>

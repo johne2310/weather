@@ -1,6 +1,6 @@
 {
   "name": "weather",
-  "version": "0.0.10",
+  "version": "0.0.17",
   "description": "A weather app built with Quasar",
   "productName": "Quasar Weather",
   "cordovaId": "com.day41.weather",
@@ -10,26 +10,29 @@
   "scripts": {
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ./",
     "test": "echo \"No test specified\" && exit 0",
-    "dev": "quasar dev --modern",
-    "dev-e": "quasar dev -m electron --modern",
-    "build": "quasar build --modern",
+    "dev": "QENV=production quasar dev --modern",
+    "dev-e": "QENV=development quasar dev -m electron",
+    "build": "QENV=production quasar build --modern",
     "build-e": "quasar build -m electron",
-    "publish-e": "quasar build -m electron -P always"
+    "build-ew": "QENV=production quasar build -m electron -T win32",
+    "publish-e": "QENV=production quasar build -m electron -P always",
+    "publish-ew": "quasar build -m electron -T win32 -P always",
+    "win-cert": "electron-builder create-self-signed-cert -p day41"
   },
   "dependencies": {
-    "@quasar/extras": "^1.0.0",
+    "@quasar/extras": "^1.8.2",
     "axios": "^0.18.1",
     "electron-log": "^4.2.0",
-    "electron-main-window": "^1.0.4",
     "electron-notarize": "^0.3.0",
-    "electron-progressbar": "^1.2.0",
     "electron-updater": "^4.3.1",
+    "global": "^4.4.0",
     "package.json": "^2.0.1",
-    "qenv": "^1.1.7",
-    "quasar": "^1.12.2"
+    "quasar": "^1.12.3",
+    "websocket-extensions": "^0.1.4"
   },
   "devDependencies": {
-    "@quasar/app": "^1.9.5",
+    "@quasar/app": "^1.9.6",
+    "@quasar/quasar-app-extension-qenv": "^1.0.1",
     "babel-eslint": "^10.0.1",
     "devtron": "^1.4.0",
     "electron": "^9.0.2",

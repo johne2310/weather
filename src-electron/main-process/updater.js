@@ -1,10 +1,16 @@
 //Modules
-const { dialog } = require('electron');
-const { autoUpdater } = require('electron-updater');
-const mainWindow = require('./electron-main.js').mainWindow;
+// const { dialog } = require('electron');
+// const { autoUpdater } = require('electr
+// on-updater');
+import { dialog } from 'electron';
+import { autoUpdater } from 'electron-updater';
 
-const window = require('electron').BrowserWindow;
-const focusedWindow = window.getAllWindows()[0];
+import { mainWindow } from './electron-main';
+
+// const mainWindow = require('./electron-main.js').mainWindow;
+
+// const window = require('electron').BrowserWindow;
+// const focusedWindow = window.getAllWindows()[0];
 
 //-------------------------------------------------------------------
 // Logging
@@ -19,8 +25,6 @@ autoUpdater.logger = require('electron-log');
 autoUpdater.logger.transports.file.level = 'info';
 const logger = autoUpdater.logger;
 
-logger.info('focussedWindow: ' + mainWindow);
-
 /*
 - log file is based on Electron process (e.g. main)
 - log file location ~Library/Logs/Quasar Weather/main.log
@@ -28,12 +32,13 @@ logger.info('focussedWindow: ' + mainWindow);
  */
 
 //This function communicates the download progress message to the renderer (index.vue)
+//We mainWindow is exported from electron-main.js and imported here to give access to the main BrowserWindow
 function sendStatusToWindow(text) {
-  logger.info(text);
+  // logger.info(text);
   if (mainWindow !== null) {
     mainWindow.webContents.send('message', text);
   } else {
-    logger.info('Win does not exist');
+    logger.info('mainWindow does not exist');
   }
 }
 
@@ -41,7 +46,7 @@ function sendStatusToWindow(text) {
 autoUpdater.autoDownload = false;
 
 //single export to check for and apply any available updates
-module.exports = () => {
+export function updater() {
   //Check for updates (GH Releases)
   autoUpdater.checkForUpdates().catch(error => {
     dialog.showErrorBox('There was an error', error + ' occurred');
@@ -103,15 +108,18 @@ module.exports = () => {
   //Implement a progress bar for the update download
 
   autoUpdater.on('download-progress', progressObj => {
-    let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
-    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    const progressValue = Math.round(progressObj.percent);
+    let log_message = 'Downloaded ' + Math.round(progressObj.percent) + '%';
     log_message =
       log_message +
       ' (' +
-      progressObj.transferred +
-      '/' +
-      progressObj.total +
-      ')';
-    sendStatusToWindow(log_message);
+      Math.round(progressObj.transferred / 100000) +
+      'MB/' +
+      Math.round(progressObj.total / 1000000) +
+      'MB)';
+    sendStatusToWindow(progressValue);
+    // sendStatusToWindow(log_message);
+
+    mainWindow.setProgressBar(progressValue / 100);
   });
-};
+}

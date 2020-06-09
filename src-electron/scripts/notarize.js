@@ -1,5 +1,5 @@
 const { notarize } = require('electron-notarize');
-const envFile = require('../../quasar.env.json');
+const envFile = require('../../.quasar.env.json');
 // const env = envFile[process.env.QENV];
 
 exports.default = async function notarizing(context) {
