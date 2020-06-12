@@ -1,6 +1,6 @@
 {
   "name": "weather",
-  "version": "0.0.17",
+  "version": "0.0.28",
   "description": "A weather app built with Quasar",
   "productName": "Quasar Weather",
   "cordovaId": "com.day41.weather",
@@ -10,12 +10,12 @@
   "scripts": {
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ./",
     "test": "echo \"No test specified\" && exit 0",
-    "dev": "QENV=production quasar dev --modern",
-    "dev-e": "QENV=development quasar dev -m electron",
-    "build": "QENV=production quasar build --modern",
+    "dev": "quasar dev --modern",
+    "dev-e": "quasar dev -m electron",
+    "build": "quasar build --modern",
     "build-e": "quasar build -m electron",
-    "build-ew": "QENV=production quasar build -m electron -T win32",
-    "publish-e": "QENV=production quasar build -m electron -P always",
+    "build-ew": "quasar build -m electron -T win32",
+    "publish-e": "quasar build -m electron -P always",
     "publish-ew": "quasar build -m electron -T win32 -P always",
     "win-cert": "electron-builder create-self-signed-cert -p day41"
   },
@@ -28,7 +28,8 @@
     "global": "^4.4.0",
     "package.json": "^2.0.1",
     "quasar": "^1.12.3",
-    "websocket-extensions": "^0.1.4"
+    "websocket-extensions": "^0.1.4",
+    "yarn": "^1.22.4"
   },
   "devDependencies": {
     "@quasar/app": "^1.9.6",

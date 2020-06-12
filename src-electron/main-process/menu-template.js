@@ -3,6 +3,7 @@ import { mainWindow } from './electron-main';
 
 const isMac = process.platform === 'darwin';
 const versionNo = app.getVersion();
+const appName = app.getName();
 
 export const menuTemplate = [
   ...(isMac
@@ -28,7 +29,7 @@ export const menuTemplate = [
     label: 'Help',
     submenu: [
       {
-        label: 'Version: ' + versionNo,
+        label: appName + ': v' + versionNo,
       },
     ],
   },

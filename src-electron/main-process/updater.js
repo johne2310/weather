@@ -1,16 +1,12 @@
 //Modules
 // const { dialog } = require('electron');
-// const { autoUpdater } = require('electr
-// on-updater');
+// const { autoUpdater } = require('electron-updater');
 import { dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
 import { mainWindow } from './electron-main';
 
 // const mainWindow = require('./electron-main.js').mainWindow;
-
-// const window = require('electron').BrowserWindow;
-// const focusedWindow = window.getAllWindows()[0];
 
 //-------------------------------------------------------------------
 // Logging
@@ -109,17 +105,10 @@ export function updater() {
 
   autoUpdater.on('download-progress', progressObj => {
     const progressValue = Math.round(progressObj.percent);
-    let log_message = 'Downloaded ' + Math.round(progressObj.percent) + '%';
-    log_message =
-      log_message +
-      ' (' +
-      Math.round(progressObj.transferred / 100000) +
-      'MB/' +
-      Math.round(progressObj.total / 1000000) +
-      'MB)';
+    //call function to send message to ipcRenderer to show progress label
     sendStatusToWindow(progressValue);
-    // sendStatusToWindow(log_message);
 
+    //set Taskbar icon progress status
     mainWindow.setProgressBar(progressValue / 100);
   });
 }

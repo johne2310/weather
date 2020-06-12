@@ -5,7 +5,6 @@ import { app, BrowserWindow, Menu, nativeTheme } from 'electron';
 //import update module which contains all the aut-update logic
 import { updater } from './updater';
 import { menuTemplate } from './menu-template';
-const envFile = require('../../.quasar.env.json');
 
 //set path variable to support import of electron-preload request
 const path = require('path');
@@ -40,6 +39,8 @@ function createWindow() {
   if (process.env.NODE_ENV !== 'development') {
     // only run autoupdate if not dev mode
     updater();
+
+    updater
   }
   /**
    * Initial window options

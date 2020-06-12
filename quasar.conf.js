@@ -190,7 +190,7 @@ module.exports = function(/* ctx */) {
         win: {
           certificateFile: envFile.production.CSC_LINK,
           certificatePassword: envFile.production.CSC_KEY_PASSWORD,
-          // publisherName: 'day41',
+          publisherName: ['John Evans'],
           // certificateFile: 'src-electron/build/Mac_Dev_Cert_for_Win_Use.p12',
           // certificatePassword: '',
         },
