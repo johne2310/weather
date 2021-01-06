@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.8.2",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "electron-log": "^4.2.0",
     "electron-notarize": "^0.3.0",
     "electron-updater": "^4.3.1",
